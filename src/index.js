@@ -1,33 +1,40 @@
 module.exports = function check(str, bracketsConfig) {
-    let count = Array(bracketsConfig.length).fill(0);
-    
-    for (let indArr = 0; indArr < bracketsConfig.length; indArr++) {
-        for (let j = 0; j < str.length; j++) {    
-            if (str[j] === bracketsConfig[indArr][0]) count[indArr]++;
-            if (str[j] === bracketsConfig[indArr][1]) {
-                count[indArr]--;
-                for (let i = indArr; i < count.length; i++) {
-                   if (count[i] !== 0) return false; 
+    let newStr = '';
+    let count = 0;
+    for (let i = 0; i < str.length; i++) {
+        for (let indArr = 0; indArr < bracketsConfig.length; indArr++) {
+            if (str[i] === bracketsConfig[indArr][0] && bracketsConfig[indArr][1] !== bracketsConfig[indArr][0]) {
+                newStr += str[i];
+                count++;
+                
+            }
+
+            if (str[i] === bracketsConfig[indArr][1] && bracketsConfig[indArr][1] !== bracketsConfig[indArr][0]) {
+                count--;
+                if (newStr[newStr.length - 1] !== bracketsConfig[indArr][0]) {
+                    return false;
+                } 
+                newStr = newStr.slice(0, -1);
+
+            }
+            if (str[i] === bracketsConfig[indArr][0] && bracketsConfig[indArr][1] === bracketsConfig[indArr][0]) {
+                
+                if (newStr[newStr.length - 1] !== bracketsConfig[indArr][0]) {
+                    newStr += str[i];
+                    count++;
+                    break    
                 }
+
+                if (newStr[newStr.length - 1] === bracketsConfig[indArr][0]) {
+                    newStr = newStr.slice(0, -1);
+                    count--;
+
+                }
+                
             }
-            for (let a of count) {
-                if (a < 0) return false;
-            }
+            if (count < 0) return false;
         }
     }
-    for (let a of count) {
-        if (a !== 0) return false;
-    }
-    return true;
-    // for (let indArr = 0; indArr < bracketsConfig.length; indArr++) {  
-    //   for (let j = 0; j < str.length; j++) {
-    //       if (str[j] === bracketsConfig[indArr][0]) count[indArr]++;
-    //       if (str[j] === bracketsConfig[indArr][1]) count[indArr]--;
-    //       for (let a of count) {
-    //           if (a < 0) return false;
-    //       }
-    //   }
-    // i      
-    // return true;
 
+    return (!count);
 }
